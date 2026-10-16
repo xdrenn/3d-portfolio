@@ -1,0 +1,51 @@
+:root {
+  --color-bg: #ffffff;
+  --color-fg: #000000;
+  --color-muted: #8b8b8b;
+  --color-line: rgba(0, 0, 0, 0.12);
+  --color-guide: rgba(0, 0, 0, 0.055);
+  --color-panel: #f1f1f1;
+
+  --font-sans: "Inter Tight", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-serif: "Instrument Serif", "Times New Roman", Times, serif;
+  --font-pixel: "Silkscreen", "Courier New", monospace;
+
+  --page-padding: clamp(14px, 2vw, 32px);
+  --gutter: clamp(10px, 1.4vw, 22px);
+
+  --gradient-holo: linear-gradient(105deg, #a9e4ff 0%, #d4bcff 20%, #ffc9ea 40%, #fff0a8 58%, #b6ffdc 76%, #a9e4ff 100%);
+  --gradient-foil: linear-gradient(115deg, #9fdcff 0%, #c9b2ff 12%, #ffb8e2 24%, #fff1a0 36%, #a8ffd6 48%, #9fdcff 60%, #c9b2ff 72%, #ffb8e2 84%, #fff1a0 100%);
+
+  --texture-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --texture-crinkle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='400'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.006 .028' numOctaves='4' seed='7'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='gamma' exponent='1.6'/%3E%3CfeFuncG type='gamma' exponent='1.6'/%3E%3CfeFuncB type='gamma' exponent='1.6'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23c)'/%3E%3C/svg%3E");
+  --mask-sparkle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='44 44 32 32'%3E%3Cpath d='M60 44 Q62 58 76 60 Q62 62 60 76 Q58 62 44 60 Q58 58 60 44Z'/%3E%3C/svg%3E");
+
+  --ease-out-expo: cubic-bezier(0.2, 0.8, 0.1, 1);
+
+  color-scheme: light;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-bg: #000;
+    --color-fg: #f4f4f4;
+    --color-muted: #8a8a8a;
+    --color-line: rgba(255, 255, 255, 0.16);
+    --color-guide: rgba(255, 255, 255, 0.06);
+    --color-panel: #111;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --color-bg: #000;
+  --color-fg: #f4f4f4;
+  --color-muted: #8a8a8a;
+  --color-line: rgba(255, 255, 255, 0.16);
+  --color-guide: rgba(255, 255, 255, 0.06);
+  --color-panel: #111;
+  color-scheme: dark;
+}

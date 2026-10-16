@@ -1,0 +1,157 @@
+html {
+  scroll-padding-top: env(safe-area-inset-top, 0px);
+  scroll-behavior: smooth;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.42;
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-fg);
+  outline-offset: 3px;
+}
+
+em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+}
+
+main,
+footer {
+  position: relative;
+  z-index: 2;
+}
+
+section {
+  position: relative;
+  padding-top: clamp(90px, 12vw, 190px);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gutter);
+}
+
+.page-padding {
+  padding-left: var(--page-padding);
+  padding-right: var(--page-padding);
+}
+
+.text-small {
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.hover-italic:hover {
+  font-family: var(--font-serif);
+  font-style: italic;
+}
+
+.section-head {
+  align-items: end;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--color-fg);
+}
+
+.section-head__title {
+  grid-column: 1 / 9;
+  margin: 0;
+  font-size: clamp(46px, 7vw, 118px);
+  font-weight: 400;
+  line-height: 0.86;
+  letter-spacing: -0.06em;
+}
+
+.section-head__lead {
+  grid-column: 10 / 13;
+  margin: 0;
+}
+
+/*
+ * Holographic text uses background-clip: text, which only paints inside the element's box.
+ * Italic overhangs, descenders and tight line-heights spill outside it and get cut off.
+ * --holo-bleed pads the box on every side and negative margins cancel it, so layout stays put.
+ */
+.holo-bleed {
+  --holo-bleed: 0.18em;
+  padding: var(--holo-bleed);
+  margin: calc(var(--holo-bleed) * -1);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+@keyframes foil-shift {
+  to {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 860px) {
+  .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .section-head__title,
+  .section-head__lead {
+    grid-column: 1 / 5;
+  }
+
+  .section-head__lead {
+    margin-top: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0s !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}

@@ -1,0 +1,103 @@
+.contact__email-link {
+  display: block;
+  width: max-content;
+  max-width: calc(100% + var(--holo-bleed) * 2);
+  margin-top: calc(clamp(28px, 4vw, 56px) - var(--holo-bleed));
+  font-size: clamp(58px, 13.5vw, 240px);
+  line-height: 0.86;
+  letter-spacing: -0.07em;
+  text-decoration: none;
+}
+
+.contact__email-link:hover,
+.contact__email-link:focus-visible {
+  background: var(--gradient-holo);
+  background-size: 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: foil-shift 2s linear infinite;
+}
+
+.contact__email-link:hover em {
+  -webkit-text-fill-color: transparent;
+}
+
+.contact__card-area {
+  align-items: center;
+  row-gap: 30px;
+  margin-top: clamp(70px, 9vw, 140px);
+}
+
+.contact__card-copy {
+  grid-column: 1 / 5;
+  align-self: end;
+  padding-top: 10px;
+  border-top: 1px solid var(--color-fg);
+}
+
+.contact__card-title {
+  margin: 0 0 10px;
+  font-size: clamp(28px, 3vw, 46px);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+}
+
+.contact__card-hint {
+  max-width: 30ch;
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 14px;
+}
+
+.contact__card-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 18px;
+  font-size: 14px;
+}
+
+.contact__card-actions button {
+  border-bottom: 1px solid var(--color-fg);
+}
+
+.contact__card-area > .holo-card {
+  grid-column: 6 / 13;
+}
+
+.social-links {
+  margin-top: clamp(44px, 6vw, 90px);
+}
+
+.social-links__item {
+  grid-column: span 3;
+  padding-top: 10px;
+  border-top: 1px solid var(--color-fg);
+  font-size: clamp(18px, 1.6vw, 24px);
+  letter-spacing: -0.02em;
+  text-decoration: none;
+}
+
+.social-links__caption {
+  display: block;
+  color: var(--color-muted);
+  font-size: 13px;
+  letter-spacing: 0;
+}
+
+@media (max-width: 860px) {
+  .contact__card-copy,
+  .contact__card-area > .holo-card {
+    grid-column: 1 / 5;
+  }
+
+  .contact__card-area > .holo-card {
+    order: -1;
+  }
+
+  .social-links__item {
+    grid-column: span 2;
+    margin-bottom: 22px;
+  }
+}
