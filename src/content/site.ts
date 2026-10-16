@@ -7,7 +7,7 @@ export const BADGE_TEXT = "open for projects ✦ say hello ✦ open for projects
 export const SERVICES = [
   { title: "Websites", description: "Design and development, from landing pages to longreads. Figma, Tilda, WordPress or code." },
   { title: "Interfaces", description: "Web and mobile app screens, ready for developers." },
-  { title: "Social media and decks", description: "Profile packaging, post templates, presentations." },
+  { title: "Social media", description: "Profile packaging, post templates, presentations." },
   { title: "Graphics", description: "Logos, posters, print." },
 ];
 
