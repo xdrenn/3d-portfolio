@@ -8,8 +8,6 @@ import "./about.css";
 
 /** Key phrases that get the marker highlight. */
 const HIGHLIGHTS = [
-  "Android developer",
-  "full-stack developer",
   "combine design and development",
   "unique digital experiences",
   "the whole brand",
