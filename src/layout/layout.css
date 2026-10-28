@@ -129,16 +129,24 @@ html[data-grid="off"] .panel::before {
 }
 
 @media (max-width: 860px) {
-  .nav__logo {
-    grid-column: 1 / 3;
+  /* Same order as on desktop: logo, links, status. A row is narrower than the 4-column grid needs. */
+  .nav {
+    display: flex;
+    gap: 14px;
   }
 
   .nav__links {
-    display: none;
+    margin-left: auto;
+    gap: 10px;
   }
 
+  /* No room for the words: the green dot alone says it. */
   .nav__status {
-    grid-column: 3 / 5;
+    font-size: 0;
+  }
+
+  .nav__status-dot {
+    margin-right: 0;
   }
 
   /* A thin line across the footer, inside the page padding. */

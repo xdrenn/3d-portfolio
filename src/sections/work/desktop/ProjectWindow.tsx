@@ -1,6 +1,7 @@
 import { useCallback, useRef, useState } from "react";
 import { formatCategories, PROJECTS } from "@/content/projects";
 import { ProjectMediaView } from "@/components/ProjectMediaView";
+import { isPhoneLayout } from "@/lib/breakpoints";
 import { projectFileName } from "./desktopFiles";
 import { DesktopWindowFrame, type DesktopWindowProps } from "./DesktopWindow";
 
@@ -11,15 +12,22 @@ type ProjectWindowProps = DesktopWindowProps & {
 
 type ViewerSize = { width: number; height: number };
 
-const MAX_WIDTH_RATIO = 0.6;
-const MAX_HEIGHT_RATIO = 0.8;
-const VERTICAL_MARGIN_RATIO = 0.08;
+type ViewerLimits = { maxWidthRatio: number; maxHeightRatio: number; verticalMarginRatio: number };
+
+const DESKTOP_LIMITS: ViewerLimits = { maxWidthRatio: 0.6, maxHeightRatio: 0.8, verticalMarginRatio: 0.08 };
+/** On a phone the picture takes all the room there is: the whole screen under the menu bar. */
+const PHONE_LIMITS: ViewerLimits = { maxWidthRatio: 1, maxHeightRatio: 1, verticalMarginRatio: 0 };
+/** Height of the menu bar on phones (desktop.css). */
+const PHONE_MENUBAR_HEIGHT = 22;
 const MIN_WIDTH = 220;
 const FALLBACK_ASPECT = 4 / 3;
 
 function computeViewerSize(aspect: number, screenWidth: number, screenHeight: number, chromeHeight: number): ViewerSize {
-  const maxWidth = screenWidth * MAX_WIDTH_RATIO;
-  const maxHeight = screenHeight * MAX_HEIGHT_RATIO - chromeHeight - screenHeight * VERTICAL_MARGIN_RATIO;
+  const phone = isPhoneLayout();
+  const limits = phone ? PHONE_LIMITS : DESKTOP_LIMITS;
+  const usableHeight = phone ? screenHeight - PHONE_MENUBAR_HEIGHT : screenHeight;
+  const maxWidth = screenWidth * limits.maxWidthRatio;
+  const maxHeight = usableHeight * limits.maxHeightRatio - chromeHeight - usableHeight * limits.verticalMarginRatio;
 
   let width = maxWidth;
   let height = width / aspect;
@@ -66,6 +74,7 @@ export function ProjectWindow({ projectIndex, onOpenCase, ...windowProps }: Proj
       {...windowProps}
       ref={frameRef}
       title={projectFileName(project.title)}
+      className="desktop-window--media"
       width={viewerSize?.width}
       fitKey={viewerSize ? `${viewerSize.width}x${viewerSize.height}` : undefined}
     >

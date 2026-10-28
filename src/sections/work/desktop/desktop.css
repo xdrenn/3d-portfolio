@@ -165,8 +165,21 @@
   background: #fff;
 }
 
+.desktop-window__close svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: #000;
+  stroke-width: 1.4;
+}
+
 .desktop-window__close:hover {
   background: #000;
+}
+
+.desktop-window__close:hover svg {
+  stroke: #fff;
 }
 
 .desktop-window__body {
@@ -179,8 +192,11 @@
   background: #111;
 }
 
-.desktop-window__body img,
-.desktop-window__body video {
+/* Pinned to the body's box: a tall poster in a wide window shrinks to fit instead of spilling out and getting cut. */
+.desktop-window--media .desktop-window__body img,
+.desktop-window--media .desktop-window__body video {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: contain;
@@ -244,13 +260,125 @@
   }
 }
 
+/*
+ * Phones: the OS works like a phone. Icons sit in a 4 x 2 grid across the whole screen,
+ * every window opens full-screen under the menu bar (no dragging), and everything a finger
+ * touches is bigger than it looks.
+ */
 @media (max-width: 860px) {
+  .desktop__menubar {
+    height: 22px;
+    font-size: 9px;
+  }
+
   .desktop__icons {
-    grid-template-rows: repeat(3, auto);
+    top: 30px;
+    left: 2cqw;
+    right: 2cqw;
+    bottom: 6px;
+    grid-auto-flow: row;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: none;
+    gap: 6px 0;
+    align-content: space-evenly;
+    direction: ltr;
+  }
+
+  .desktop-icon {
+    width: auto;
+    gap: 4px;
+    padding: 4px 2px;
+    font-size: 8px;
+  }
+
+  .desktop-icon__thumbnail {
+    width: 40px;
+  }
+
+  .desktop-icon__name {
+    overflow-wrap: normal;
+  }
+
+  /* Notes: the window's own position and size (inline styles from JS) give way to the full screen. */
+  .desktop-window:not(.desktop-window--media) {
+    inset: 22px 0 0 !important;
+    width: auto !important;
   }
 
   .desktop-window {
-    width: 74cqw;
+    border-width: 0;
+    box-shadow: none;
+  }
+
+  .desktop-window__bar {
+    height: 30px;
+    cursor: default;
+  }
+
+  .desktop-window__title {
+    font-size: 10px;
+  }
+
+  /* 18px to look at, 44px to hit. */
+  .desktop-window__close {
+    left: 8px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .desktop-window__close::after {
+    content: "";
+    position: absolute;
+    inset: -13px;
+  }
+
+  .desktop-window:not(.desktop-window--media) .desktop-window__body {
+    flex: 1;
+    height: auto !important;
+    min-height: 0;
+  }
+
+  /*
+   * Pictures keep their own shape (size from ProjectWindow.tsx): a poster stands up, a site lies down,
+   * centred in the room under the menu bar, never cropped.
+   */
+  .desktop-window--media {
+    inset: auto !important;
+    left: 50% !important;
+    top: calc(22px + (100% - 22px) / 2) !important;
+    border-width: 1px;
+    translate: -50% -50%;
+  }
+
+  /*
+   * A tall poster can't be narrower than the footer's buttons, so its window is a bit wider than the picture.
+   * Crop the edges instead of showing black bars: the shape stays close to the work's own.
+   */
+  .desktop-window--media .desktop-window__body img,
+  .desktop-window--media .desktop-window__body video {
+    object-fit: cover;
+  }
+
+  .desktop-window__body--paper {
+    padding: 12px;
+    font-size: 11px;
+  }
+
+  .desktop-window__footer {
+    gap: 6px;
+    padding: 5px 6px;
+    font-size: 10px;
+  }
+
+  .desktop-window__footer button {
+    min-width: 34px;
+    min-height: 30px;
+    padding: 0 8px;
+  }
+
+  .desktop-window__body--certificate {
+    grid-template-columns: 38% 1fr;
+    gap: 10px;
   }
 }
 

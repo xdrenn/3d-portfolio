@@ -136,9 +136,12 @@
 
   .selected__meta {
     grid-column: 1 / 5;
-    grid-auto-flow: column;
-    justify-content: space-between;
-    padding: 8px 0 0;
+    padding: 6px 0 0;
+  }
+
+  /* On a phone the category is enough; the role lives in the case itself. */
+  .selected__role {
+    display: none;
   }
 
   .selected__desktop-link {

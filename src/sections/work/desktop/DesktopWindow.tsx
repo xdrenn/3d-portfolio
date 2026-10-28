@@ -8,6 +8,7 @@ import {
   type ReactNode,
   type RefObject,
 } from "react";
+import { isPhoneLayout } from "@/lib/breakpoints";
 import { clamp } from "@/lib/math";
 import type { OpenWindow } from "./useDesktop";
 
@@ -22,6 +23,8 @@ export type DesktopWindowProps = {
 
 type DesktopWindowFrameProps = DesktopWindowProps & {
   title: string;
+  /** Extra class: "desktop-window--media" keeps the picture's own shape on phones instead of filling the screen. */
+  className?: string;
   width?: number;
   fitKey?: string;
   children: ReactNode;
@@ -39,7 +42,7 @@ const CLOSE_BUTTON_CLASS = "desktop-window__close";
 const DRAGGING_CLASS = "is-dragging";
 
 export const DesktopWindowFrame = forwardRef<HTMLDivElement | null, DesktopWindowFrameProps>(function DesktopWindowFrame(
-  { openWindow, isActive, screenRef, computerRef, onFocus, onClose, title, width, fitKey, children },
+  { openWindow, isActive, screenRef, computerRef, onFocus, onClose, title, className, width, fitKey, children },
   forwardedRef,
 ) {
   const frameRef = useRef<HTMLDivElement>(null);
@@ -66,6 +69,8 @@ export const DesktopWindowFrame = forwardRef<HTMLDivElement | null, DesktopWindo
 
   const startDrag = (event: PointerEvent<HTMLDivElement>) => {
     if ((event.target as HTMLElement).closest(`.${CLOSE_BUTTON_CLASS}`)) return;
+    // On phones windows are pinned: notes fill the screen, pictures sit centred (desktop.css).
+    if (isPhoneLayout()) return;
     const screen = screenRef.current;
     if (!screen) return;
 
@@ -105,7 +110,7 @@ export const DesktopWindowFrame = forwardRef<HTMLDivElement | null, DesktopWindo
   return (
     <div
       ref={frameRef}
-      className={`desktop-window${isActive ? " is-active" : ""}`}
+      className={`desktop-window${className ? ` ${className}` : ""}${isActive ? " is-active" : ""}`}
       role="dialog"
       aria-label={title}
       style={{ left: position.x, top: position.y, zIndex: openWindow.zIndex, width }}
@@ -125,7 +130,11 @@ export const DesktopWindowFrame = forwardRef<HTMLDivElement | null, DesktopWindo
             event.stopPropagation();
             onClose();
           }}
-        />
+        >
+          <svg viewBox="0 0 10 10" aria-hidden="true">
+            <path d="M2 2l6 6M8 2l-6 6" />
+          </svg>
+        </button>
         <span className="desktop-window__title">{title}</span>
       </div>
       {children}

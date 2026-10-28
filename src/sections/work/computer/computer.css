@@ -317,6 +317,14 @@
   .key {
     --key-size: clamp(54px, 17vw, 72px);
   }
+
+  .computer__shell {
+    padding: 10px 10px 0;
+  }
+
+  .computer__bezel {
+    padding: 6px;
+  }
 }
 
 /* Foil sticker on the chin: holography lives on objects in this world. */

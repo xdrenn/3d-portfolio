@@ -1,6 +1,8 @@
 /* The last section: a smaller gap under the card and text than the other sections have before the footer. */
 main > section.contact {
   padding-bottom: clamp(48px, 6vw, 96px);
+  /* The card's canvas is wider than its columns (room to tilt); keep that room from widening the page. */
+  overflow-x: clip;
 }
 
 .contact__email-link {

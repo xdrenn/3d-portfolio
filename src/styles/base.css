@@ -1,4 +1,6 @@
 html {
+  /* Phones scroll the viewport, not body: without this, anything poking past the edge lets the page slide sideways. */
+  overflow-x: clip;
   scroll-padding-top: env(safe-area-inset-top, 0px);
   /* No CSS smooth scrolling: the inertial scroll in lib/smoothScroll.ts does it. */
   scroll-behavior: auto;

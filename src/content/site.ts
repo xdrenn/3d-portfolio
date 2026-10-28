@@ -52,12 +52,14 @@ export const SWATCH_COLORS = ["#000", "#5a5a5a", "#b4b4b4", "#fff"];
 
 export const FOIL_SWATCH_OFFSETS = ["0%", "35%", "70%"];
 
-export const ABOUT_FILE_PARAGRAPHS = [
-  "Hi! I'm Anastasia - designer and developer.",
-  "And this is my OS: every folder on the desktop is a design I made.",
-  "Double-click anything to open it, like on a real computer ^_^",
-  "(or use the keys below)",
-];
+export const ABOUT_FILE = {
+  intro: ["Hi! I'm Anastasia - designer and developer.", "And this is my OS: every folder on the desktop is a design I made."],
+  openHint: {
+    mouse: "Double-click anything to open it, like on a real computer ^_^",
+    touch: "Close this note and tap any file to open it ^_^",
+  },
+  keysHint: "(or use the keys below)",
+};
 
 /**
  * Front: the person. Back: how to reach her.

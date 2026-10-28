@@ -195,7 +195,7 @@
   }
 
   .services__item {
-    grid-column: 1 / 5;
+    grid-column: span 2;
   }
 
   .sticker--smiley,
