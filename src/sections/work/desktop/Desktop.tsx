@@ -53,8 +53,6 @@ export function Desktop({ desktop, screenRef, computerRef, onOpenFile, onOpenCas
         ))}
       </div>
 
-      {desktop.isHintVisible && <div className="desktop__hint">Double-click a file to open it</div>}
-
       {windows.map((open) => {
         const windowProps: DesktopWindowProps = {
           openWindow: open,
