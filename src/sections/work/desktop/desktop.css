@@ -47,16 +47,6 @@
   direction: rtl;
 }
 
-.desktop__hint {
-  position: absolute;
-  left: 2.4cqw;
-  bottom: 2cqw;
-  padding: 2px 4px;
-  border: 1px solid #000;
-  background: #fff;
-  font-size: max(7px, 1.4cqw);
-}
-
 .desktop-icon {
   display: flex;
   flex-direction: column;

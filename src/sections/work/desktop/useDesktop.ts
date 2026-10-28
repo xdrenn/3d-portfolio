@@ -25,7 +25,7 @@ export function useDesktop(screenRef: RefObject<HTMLDivElement>, reducedMotion: 
   const [isPoweredOn, setIsPoweredOn] = useState(false);
   const [isBooted, setIsBooted] = useState(false);
   const [selectedFileIndex, setSelectedFileIndex] = useState<number | null>(null);
-  const [isHintVisible, setIsHintVisible] = useState(true);
+  const [isHintVisible, setIsHintVisible] = useState(false);
 
   const currentProjectIndex = useRef(0);
   const isBootedRef = useRef(false);
@@ -126,7 +126,7 @@ export function useDesktop(screenRef: RefObject<HTMLDivElement>, reducedMotion: 
     isBootedRef.current = false;
     setIsBooted(false);
     setWindows([]);
-    setIsHintVisible(true);
+    setIsHintVisible(false);
     setIsPoweredOn(false);
 
     requestAnimationFrame(() => requestAnimationFrame(() => setIsPoweredOn(true)));
