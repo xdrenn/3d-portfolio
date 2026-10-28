@@ -1,0 +1,151 @@
+/*
+ * Selected work: the one place where type goes huge.
+ * Titles are the design; meta stays small and quiet on the right.
+ */
+.selected__list {
+  margin: clamp(20px, 3vw, 40px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.selected__row {
+  --drift: 0px;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.selected__button {
+  width: 100%;
+  align-items: end;
+  padding: clamp(10px, 1.4vw, 22px) 0 clamp(8px, 1vw, 14px);
+  cursor: pointer;
+}
+
+.selected__title {
+  grid-column: 1 / 10;
+  display: block;
+  font-size: clamp(54px, 10.5vw, 196px);
+  font-weight: 400;
+  line-height: 0.84;
+  letter-spacing: -0.065em;
+  white-space: nowrap;
+  transform: translate3d(var(--drift), 0, 0);
+  transition: color 0.35s var(--ease-out-expo);
+  will-change: transform;
+}
+
+.selected__meta {
+  grid-column: 10 / 13;
+  display: grid;
+  gap: 2px;
+  padding-bottom: 0.6em;
+  color: var(--color-muted);
+}
+
+.selected__role {
+  color: var(--color-fg);
+}
+
+/* When one title is hovered the others step back, so the eye stays on one project. */
+.selected__list:hover .selected__row:not(.is-hovered) .selected__title {
+  color: var(--color-line);
+}
+
+.selected__row.is-hovered .selected__title {
+  font-family: var(--font-serif);
+  font-style: italic;
+  letter-spacing: -0.04em;
+}
+
+.selected__button:focus-visible .selected__title {
+  font-family: var(--font-serif);
+  font-style: italic;
+}
+
+.selected__after {
+  margin-top: 22px;
+}
+
+.selected__desktop-link {
+  grid-column: 10 / 13;
+  font-size: 15px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* The floating cover. It never takes pointer events, so it can't steal the hover. */
+.selected__preview {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 30;
+  /* Shaped like the hovered cover (set from SelectedWork.tsx); eases between shapes. */
+  width: var(--preview-width, clamp(220px, 22vw, 360px));
+  height: var(--preview-height, calc(clamp(220px, 22vw, 360px) * 0.75));
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  border: 1px solid var(--color-fg);
+  background: var(--color-panel);
+  scale: 0.85;
+  transition:
+    opacity 0.25s,
+    scale 0.45s var(--ease-out-expo),
+    width 0.5s var(--ease-out-expo),
+    height 0.5s var(--ease-out-expo);
+}
+
+.selected__preview.is-visible {
+  opacity: 1;
+  scale: 1;
+}
+
+.selected__preview img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+}
+
+.selected__preview img.is-current {
+  opacity: 1;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .selected__preview {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .selected__title {
+    transform: none;
+  }
+
+  .selected__preview {
+    display: none;
+  }
+}
+
+@media (max-width: 860px) {
+  .selected__title {
+    grid-column: 1 / 5;
+    white-space: normal;
+  }
+
+  .selected__meta {
+    grid-column: 1 / 5;
+    grid-auto-flow: column;
+    justify-content: space-between;
+    padding: 8px 0 0;
+  }
+
+  .selected__desktop-link {
+    grid-column: 1 / 5;
+  }
+}
+
+.selected {
+  overflow-x: clip;
+}

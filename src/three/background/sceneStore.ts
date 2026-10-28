@@ -56,8 +56,8 @@ export function createSceneStore(reducedMotion: boolean): SceneStore {
 
 type Viewport = { fov: number; cameraZ: number; width: number; height: number };
 
-const BLOB_SCREEN_Y = { desktop: 0.6, mobile: 0.36 };
-const BLOB_HEIGHT_RATIO = { desktop: 0.165, mobile: 0.11 };
+const BLOB_SCREEN_Y = { desktop: 0.3, mobile: 0.87 };
+const BLOB_HEIGHT_RATIO = { desktop: 0.12, mobile: 0.08 };
 const BLOB_WIDTH_RATIO = { desktop: 0.095, mobile: 0.17 };
 const BLOB_BASE_DIAMETER = 2.4;
 

@@ -1,3 +1,5 @@
+import type { CardLink } from "./cardTextures";
+
 export type CardMotion = {
   rotationX: number;
   rotationY: number;
@@ -10,6 +12,8 @@ export type CardMotion = {
   lastPointerX: number;
   lastPointerY: number;
   requestFrame: () => void;
+  /** Set by the scene: the link under a screen point, if the paper side shows one there. */
+  linkAt: (clientX: number, clientY: number) => CardLink | null;
 };
 
 export const HALF_TURN = 180;
@@ -27,6 +31,7 @@ export const createCardMotion = (): CardMotion => ({
   lastPointerX: 0,
   lastPointerY: 0,
   requestFrame: () => {},
+  linkAt: () => null,
 });
 
 export const nearestFaceAngle = (angle: number) => Math.round(angle / HALF_TURN) * HALF_TURN;

@@ -35,3 +35,28 @@
   transform: translateX(-50%);
   pointer-events: none;
 }
+
+/*
+ * The card's links as plain HTML, for keyboards and screen readers.
+ * Hidden until a link gets keyboard focus; then they show as a row under the card.
+ */
+.holo-card__links {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  display: flex;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 14px;
+  clip-path: inset(50%);
+}
+
+.holo-card__links:focus-within {
+  clip-path: none;
+}
+
+.holo-card__links a {
+  border-bottom: 1px solid var(--color-fg);
+}

@@ -3,7 +3,7 @@ import { anchorTo, ELEMENT_IDS } from "@/lib/elementIds";
 import "./layout.css";
 
 const NAV_LINKS = [
-  { label: "(work)", target: ELEMENT_IDS.work },
+  { label: "(work)", target: ELEMENT_IDS.selectedWork },
   { label: "(about)", target: ELEMENT_IDS.about },
   { label: "(contact)", target: ELEMENT_IDS.contact },
 ];

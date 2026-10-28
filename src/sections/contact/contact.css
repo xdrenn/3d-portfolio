@@ -1,10 +1,15 @@
+/* The last section: a smaller gap under the card and text than the other sections have before the footer. */
+main > section.contact {
+  padding-bottom: clamp(48px, 6vw, 96px);
+}
+
 .contact__email-link {
   display: block;
   width: max-content;
   max-width: calc(100% + var(--holo-bleed) * 2);
   margin-top: calc(clamp(28px, 4vw, 56px) - var(--holo-bleed));
-  font-size: clamp(58px, 13.5vw, 240px);
-  line-height: 0.86;
+  font-size: clamp(48px, 10vw, 180px);
+  line-height: 0.92;
   letter-spacing: -0.07em;
   text-decoration: none;
 }
@@ -23,25 +28,94 @@
   -webkit-text-fill-color: transparent;
 }
 
+/* The two text buttons sit under the "Take a card" text. */
+.contact__card-links {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: var(--gutter);
+  margin-top: 24px;
+   font-size: 18px;
+}
+.contact__card-copy .contact__card-copy-inner {
+  max-width: none;
+}
+.contact__card-links > :nth-child(1) {
+  grid-column: 1;
+}
+
+.contact__card-links > :nth-child(2) {
+  grid-column: 2;
+}
+.contact__card-links > * {
+  white-space: nowrap;
+}
+
+.contact__text-button {
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  transition: opacity 0.2s;
+}
+
+.contact__text-button:hover,
+.contact__text-button:focus-visible {
+  outline: none;
+  font-family: var(--font-serif);
+  font-style: italic;
+}
+
+.contact__text-button.is-done {
+  text-decoration-style: dotted;
+}
+
 .contact__card-area {
   align-items: center;
   row-gap: 30px;
   margin-top: clamp(70px, 9vw, 140px);
 }
 
+/*
+ * The text ends level with the card's bottom edge, not with the bottom of its canvas.
+ * The 3D card fills about 71% of the canvas height (see CardScene's fill ratios),
+ * so ~14.6% of the row is left under it; the ::after spacer takes the same room.
+ */
 .contact__card-copy {
   grid-column: 1 / 5;
-  align-self: end;
-  padding-top: 10px;
-  border-top: 1px solid var(--color-fg);
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.contact__card-copy-inner {
+  max-width: 340px;
+}
+
+.contact__card-copy::after {
+  content: "";
+  flex: 0 0 14.6%;
+}
+
+.contact__card-index {
+  display: block;
+  margin-bottom: 14px;
+  color: var(--color-muted);
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .contact__card-title {
-  margin: 0 0 10px;
-  font-size: clamp(28px, 3vw, 46px);
+  margin: 0 0 14px;
+  font-size: clamp(32px, 3.4vw, 52px);
   font-weight: 400;
   line-height: 0.95;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.045em;
 }
 
 .contact__card-hint {
@@ -49,21 +123,76 @@
   margin: 0;
   color: var(--color-muted);
   font-size: 14px;
+  line-height: 1.45;
+  text-wrap: pretty;
 }
 
+/* Two pill buttons: outlined at rest, filled on hover. */
 .contact__card-actions {
   display: flex;
-  gap: 16px;
-  margin-top: 18px;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.contact__card-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px 9px 12px;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  color: var(--color-fg);
   font-size: 14px;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  transition: background-color 0.25s var(--ease-out-expo), color 0.25s var(--ease-out-expo),
+    border-color 0.25s var(--ease-out-expo);
 }
 
-.contact__card-actions button {
-  border-bottom: 1px solid var(--color-fg);
+.contact__card-button-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-panel);
+  font-size: 12px;
+  transition: background-color 0.25s, transform 0.4s var(--ease-out-expo);
 }
 
+.contact__card-button:hover,
+.contact__card-button:focus-visible {
+  border-color: var(--color-fg);
+  background: var(--color-fg);
+  color: var(--color-bg);
+  outline: none;
+}
+
+.contact__card-button:hover .contact__card-button-icon,
+.contact__card-button:focus-visible .contact__card-button-icon {
+  background: var(--gradient-holo);
+  color: #000;
+}
+
+.contact__card-button:first-child:hover .contact__card-button-icon {
+  transform: rotate(180deg);
+}
+
+.contact__card-button.is-done .contact__card-button-icon {
+  background: var(--gradient-holo);
+  color: #000;
+}
+
+/*
+ * The 3D card fills 78% of its canvas width (FILL_WIDTH_RATIO in CardScene); the rest is room
+ * for it to tilt. The canvas is widened by that ratio and centred on its columns,
+ * so the card itself starts on column 7 and ends on the grid's right edge.
+ */
 .contact__card-area > .holo-card {
-  grid-column: 6 / 13;
+  grid-column: 7 / 13;
+  width: calc(100% / 0.78);
+  margin-left: calc((100% - 100% / 0.78) / 2);
 }
 
 .social-links {
@@ -96,8 +225,17 @@
     order: -1;
   }
 
+  .contact__card-copy::after {
+    display: none;
+  }
+
   .social-links__item {
     grid-column: span 2;
     margin-bottom: 22px;
   }
+}
+
+/* On the dark ground the card's floor shadow needs more weight to read. */
+.contact .holo-card__shadow {
+  background: radial-gradient(closest-side, rgba(0, 0, 0, 0.6), transparent);
 }

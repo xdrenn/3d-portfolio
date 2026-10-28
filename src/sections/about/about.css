@@ -1,35 +1,60 @@
 .about {
   overflow: visible;
+  /* Gap from the line under the title to the text. */
+  --about-gap: clamp(32px, 4.5vw, 72px);
+  /* Gap before the services. The printed slip hangs over this gap and the services, out of the flow. */
+  --about-services-gap: clamp(96px, 11vw, 176px);
+  /* Phone only: space kept under the printer for the slip and its caption, so they cover nothing. */
+  --slip-reserve: 320px;
 }
 
-/*
- * Three levels, each clearly apart:
- * section title (SectionHead) → one statement → four quiet service columns.
- * Stickers live in their own area in columns 10–12 and never overlap the text.
- */
-.about__intro {
-  align-items: start;
-  margin-top: clamp(32px, 4.5vw, 72px);
-}
-
-.about__statement {
-  grid-column: 1 / 9;
-  max-width: 19em;
-  margin: 0;
-  font-size: clamp(28px, 3.3vw, 54px);
-  line-height: 1.04;
-  letter-spacing: -0.035em;
-  text-wrap: balance;
-}
-
-.about__stickers {
+/* Two paragraphs of one size in a single column; the printer stands to the right. */
+.about__text {
   position: relative;
+  align-items: start;
+  margin-top: var(--about-gap);
+  font-size: clamp(17px, 1.35vw, 20px);
+  line-height: 1.32;
+  letter-spacing: -0.02em;
+}
+
+.about__copy {
+  grid-column: 1 / 8;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1em;
+}
+
+.about__copy p {
+  max-width: 46ch;
+  margin: 0;
+  text-wrap: pretty;
+}
+
+/* Marker highlight on the key phrases. */
+.about__text mark {
+  padding: 0 0.12em;
+  margin: 0 -0.12em;
+  border-radius: 0.15em;
+  background: linear-gradient(transparent 12%, #a9dcff 12%, #a9dcff 92%, transparent 92%);
+  color: inherit;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* Level with the text: the printer body sits at the top of the copy; the slip hangs down from it, out of the flow. */
+.about__text .printer {
   grid-column: 10 / 13;
-  height: clamp(170px, 15vw, 240px);
+  grid-row: 1;
+  align-self: start;
+  justify-self: stretch;
+  max-width: none;
+  /* The first line box starts a little above the letters; this lowers the printer to the top of the text. */
+  margin-top: 0.32em;
 }
 
 .services {
-  margin: clamp(80px, 10vw, 160px) 0 0;
+  margin: var(--about-services-gap) 0 0;
   padding: 0;
   list-style: none;
   row-gap: 36px;
@@ -50,7 +75,8 @@
 }
 
 .services__description {
-  max-width: 28ch;
+  max-width: 30ch;
+  text-wrap: balance;
   margin: 0;
   color: var(--color-muted);
   font-size: 15px;
@@ -149,17 +175,22 @@
 }
 
 @media (max-width: 860px) {
-  .about__statement {
-    grid-column: 1 / 5;
+  .about__copy {
+    grid-column: 1 / -1;
   }
 
-  .about__stickers {
+  .about__text .printer {
     grid-column: 1 / 5;
-    height: 150px;
-    margin-top: 24px;
+    grid-row: auto;
+    align-self: start;
+    justify-self: start;
+    max-width: 270px;
+    margin-top: 32px;
+    margin-bottom: var(--slip-reserve);
   }
 
   .services {
+    margin-top: 96px;
     row-gap: 28px;
   }
 

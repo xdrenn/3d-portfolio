@@ -1,4 +1,15 @@
 :root {
+  /* Section grounds: chalk and graphite alternate down the page (see .tone-* in base.css). */
+  --chalk: #f1f1ee;
+  --graphite: #191a1c;
+  --bone: #e8e8e3;
+
+  /* Brushed aluminium for the computer and the printer. */
+  --metal-light: #eceded;
+  --metal: #d3d5d7;
+  --metal-dark: #a9adb2;
+  --metal-edge: rgba(20, 22, 26, 0.22);
+
   --color-bg: #ffffff;
   --color-fg: #000000;
   --color-muted: #8b8b8b;
@@ -18,9 +29,12 @@
 
   --texture-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   --texture-crinkle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='400'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.006 .028' numOctaves='4' seed='7'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='gamma' exponent='1.6'/%3E%3CfeFuncG type='gamma' exponent='1.6'/%3E%3CfeFuncB type='gamma' exponent='1.6'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23c)'/%3E%3C/svg%3E");
+  --texture-brushed: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='b'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9 .004' numOctaves='2' seed='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23b)'/%3E%3C/svg%3E");
   --mask-sparkle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='44 44 32 32'%3E%3Cpath d='M60 44 Q62 58 76 60 Q62 62 60 76 Q58 62 44 60 Q58 58 60 44Z'/%3E%3C/svg%3E");
 
   --ease-out-expo: cubic-bezier(0.2, 0.8, 0.1, 1);
+
+  --nav-height: 44px;
 
   color-scheme: light;
   box-sizing: border-box;

@@ -3,20 +3,21 @@ import { useFrame } from "@react-three/fiber";
 import { SphereGeometry, type Group, type Mesh, type Texture } from "three";
 import { smoothstep } from "@/lib/math";
 import { scrollProgress } from "@/state/scrollProgress";
-import { createChromeMaterial } from "./materials";
+import { createHoloLiquidMaterial } from "./materials";
 import { createObject } from "./objectCatalog";
 import { useSceneStore } from "./sceneStore";
 
 const BLOB_RADIUS = 1.35;
-const BLOB_ROUGHNESS = 0.04;
 const BOUNDING_SPHERE_MARGIN = 1.6;
 const DEFORMATION_STRENGTH = 0.11;
 const KICK_AMPLIFICATION = 1.6;
 const HOVER_KICK = 0.25;
 const RING_SCALE = 2.15;
-const BUBBLE_SCALE = 0.55;
-const BUBBLE_ORBIT_RADIUS = 1.9;
-const SCREEN_X = { desktop: 0.63, mobile: 0.8 };
+// Two little chrome sparkles orbit the planet along its ring.
+const SPARKLE_SCALES = [0.42, 0.28];
+const SPARKLE_ORBIT_RADIUS = 1.95;
+// The chrome planet sits in the empty right column of the hero, clear of the computer.
+const SCREEN_X = { desktop: 0.87, mobile: 0.78 };
 
 function createBlobGeometry() {
   const geometry = new SphereGeometry(BLOB_RADIUS, 96, 64);
@@ -53,13 +54,16 @@ export function ChromeBlob({ environmentMap }: { environmentMap: Texture }) {
   const groupRef = useRef<Group>(null);
   const blobRef = useRef<Mesh>(null);
   const ringRef = useRef<Mesh>(null);
-  const bubbleRef = useRef<Mesh>(null);
+  const sparkleRefs = useRef<(Mesh | null)[]>([]);
 
   const { geometry, restPositions } = useMemo(createBlobGeometry, []);
-  const blobMaterial = useMemo(() => createChromeMaterial(BLOB_ROUGHNESS), []);
+  const blobMaterial = useMemo(
+    () => createHoloLiquidMaterial(environmentMap, store.timeUniform, "violet"),
+    [environmentMap, store],
+  );
   const ring = useMemo(() => createObject("ring", { environmentMap, time: store.timeUniform }), [environmentMap, store]);
-  const bubble = useMemo(
-    () => createObject("bubble", { environmentMap, time: store.timeUniform }),
+  const sparkle = useMemo(
+    () => createObject("sparkle", { environmentMap, time: store.timeUniform }),
     [environmentMap, store],
   );
 
@@ -109,18 +113,33 @@ export function ChromeBlob({ environmentMap }: { environmentMap: Texture }) {
 
     const time = store.elapsed;
     if (ringRef.current) ringRef.current.rotation.z = time * 0.3;
-    bubbleRef.current?.position.set(
-      Math.cos(time * 0.5) * BUBBLE_ORBIT_RADIUS,
-      Math.sin(time * 0.7) * 0.6,
-      Math.sin(time * 0.5) * BUBBLE_ORBIT_RADIUS,
-    );
+    sparkleRefs.current.forEach((mesh, index) => {
+      if (!mesh) return;
+      const angle = time * 0.5 + index * Math.PI;
+      mesh.position.set(
+        Math.cos(angle) * SPARKLE_ORBIT_RADIUS,
+        Math.sin(time * 0.7 + index * 2) * 0.5,
+        Math.sin(angle) * SPARKLE_ORBIT_RADIUS,
+      );
+      mesh.rotation.set(time * 0.6 + index, time * 0.9, 0);
+    });
   });
 
   return (
     <group ref={groupRef}>
       <mesh ref={blobRef} geometry={geometry} material={blobMaterial} />
       <mesh ref={ringRef} geometry={ring.geometry} material={ring.material} scale={RING_SCALE} rotation-x={1.2} />
-      <mesh ref={bubbleRef} geometry={bubble.geometry} material={bubble.material} scale={BUBBLE_SCALE} />
+      {SPARKLE_SCALES.map((scale, index) => (
+        <mesh
+          key={index}
+          ref={(mesh) => {
+            sparkleRefs.current[index] = mesh;
+          }}
+          geometry={sparkle.geometry}
+          material={sparkle.material}
+          scale={scale}
+        />
+      ))}
     </group>
   );
 }

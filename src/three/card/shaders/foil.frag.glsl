@@ -42,7 +42,7 @@ float fbm(vec2 point) {
 // Classic diffraction rainbow, slightly lifted towards white.
 vec3 rainbow(float phase) {
   vec3 color = 0.5 + 0.5 * cos(6.28318 * (phase + vec3(0.0, 0.33, 0.67)));
-  return mix(color, vec3(1.0), 0.22);
+  return mix(color, vec3(1.0), 0.12);
 }
 
 // Holographic film palette: peach, pink, violet, blue, cyan, mint, yellow.
@@ -98,6 +98,8 @@ void main() {
     + uTime * 0.012;
 
   vec3 holo = mix(rainbow(phase), filmSpectrum(phase * 0.8 + 0.1), 0.4);
+  // A touch more saturation, so the foil reads as colour, not as grey metal.
+  holo = clamp(mix(vec3(dot(holo, vec3(0.299, 0.587, 0.114))), holo, 1.25), 0.0, 1.0);
   float band = 0.5 + 0.5 * sin(phase * 4.2 + drift * 2.0);
 
   // Silver sheet lit by the studio from above.
@@ -106,20 +108,20 @@ void main() {
 
   // Some areas lean silver, others full colour, the diffraction bands sit on top.
   float colorField = smoothstep(0.25, 0.75, fbm(flowPoint * 0.7 + 12.4 - tilt * 0.4));
-  float colorAmount = clamp(0.45 + 0.25 * band + 0.2 * colorField, 0.0, 0.92);
-  vec3 foil = mix(silver, holo * (0.72 + 0.38 * sky), colorAmount);
-  foil *= 0.92 + 0.12 * band;
+  float colorAmount = clamp(0.6 + 0.22 * band + 0.18 * colorField, 0.0, 0.96);
+  vec3 foil = mix(silver, holo * (0.82 + 0.34 * sky), colorAmount);
+  foil *= 0.96 + 0.12 * band;
 
   // Long soft reflections across the card: the main one follows the pointer, a fainter one trails it.
   vec2 bandDirection = normalize(vec2(0.82, -0.57));
   float bandCoord = dot(vUv - pointer, bandDirection) + tilt.x * 0.35;
   float reflections = exp(-bandCoord * bandCoord * 9.0) * 0.3 + exp(-pow(bandCoord + 0.42, 2.0) * 22.0) * 0.13;
-  foil = mix(foil, vec3(1.0), reflections * 0.55);
-  foil += reflections * 0.12 * holo;
+  foil = mix(foil, vec3(1.0), reflections * 0.42);
+  foil += reflections * 0.18 * holo;
 
   // Gentle studio light and rim colour (broad, no hot spot).
   foil += pow(lightAlignment, 8.0) * 0.18 * mix(vec3(1.0), holo, 0.4);
-  foil += fresnel * 0.14 * holo;
+  foil += fresnel * 0.18 * holo;
 
   vec3 color = min(foil, vec3(1.0));
 

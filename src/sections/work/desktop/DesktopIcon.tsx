@@ -25,6 +25,12 @@ function FileThumbnail({ file }: { file: DesktopFile }) {
       return <span className="desktop-icon__thumbnail desktop-icon__thumbnail--text">TXT</span>;
     case "card":
       return <span className="desktop-icon__thumbnail desktop-icon__thumbnail--foil" />;
+    case "certificate":
+      return (
+        <span className="desktop-icon__thumbnail desktop-icon__thumbnail--document">
+          <img alt="" decoding="async" src={projectThumbnailUrl("certificate")} />
+        </span>
+      );
   }
 }
 

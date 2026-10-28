@@ -22,6 +22,34 @@ const LABEL_COLOR = "#7a7a7a";
 
 type SparklePlacement = { x: number; y: number; size: number };
 
+/** A clickable spot on the back of the card, in UV space (0..1, y up, as the raycaster reports it). */
+export type CardLink = { href: string; label: string; u0: number; v0: number; u1: number; v1: number };
+
+/** Filled in by drawBack, so the areas always match the text as it is actually drawn. */
+let backLinks: CardLink[] = [];
+
+const LINK_PADDING = 22;
+
+/** Records the box around a line of text drawn at (x, baseline) with the current font. */
+function recordLink(context: CanvasRenderingContext2D, href: string, label: string, text: string, x: number, baseline: number, size: number) {
+  const width = context.measureText(text).width;
+  const top = baseline - size * 0.82 - LINK_PADDING;
+  const bottom = baseline + size * 0.22 + LINK_PADDING;
+  backLinks.push({
+    href,
+    label,
+    u0: (x - LINK_PADDING) / TEXTURE_WIDTH,
+    u1: (x + width + LINK_PADDING) / TEXTURE_WIDTH,
+    // Canvas y points down; the texture is flipped, so UV v = 1 at the top.
+    v0: 1 - bottom / TEXTURE_HEIGHT,
+    v1: 1 - top / TEXTURE_HEIGHT,
+  });
+}
+
+export function backLinkAt(u: number, v: number): CardLink | null {
+  return backLinks.find((link) => u >= link.u0 && u <= link.u1 && v >= link.v0 && v <= link.v1) ?? null;
+}
+
 /** The embossed foil sparkle is the only foil on the paper side. */
 const BACK_SPARKLE: SparklePlacement = { x: TEXTURE_WIDTH - MARGIN - 110, y: MARGIN + 70, size: 190 };
 
@@ -114,7 +142,8 @@ function drawFront(context: CanvasRenderingContext2D) {
 }
 
 function drawBack(context: CanvasRenderingContext2D) {
-  const { heading, email, rows } = BUSINESS_CARD.back;
+  const { heading, email, emailHref, rows } = BUSINESS_CARD.back;
+  backLinks = [];
 
   context.clearRect(0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT);
   context.fillStyle = BACK_INK_COLOR;
@@ -128,17 +157,19 @@ function drawBack(context: CanvasRenderingContext2D) {
   setLetterSpacing(context, "-5px");
   setFontToFit(context, email, 128, CONTENT_WIDTH);
   context.fillText(email, MARGIN, TEXTURE_HEIGHT - 470);
+  recordLink(context, emailHref, "Email", email, MARGIN, TEXTURE_HEIGHT - 470, 128);
 
   setLetterSpacing(context, "0px");
   context.fillRect(MARGIN, TEXTURE_HEIGHT - 405, CONTENT_WIDTH, 3);
 
   setFont(context, 50);
-  rows.forEach(([label, value], row) => {
+  rows.forEach(([label, value, href], row) => {
     const y = TEXTURE_HEIGHT - 310 + row * 78;
     context.fillStyle = LABEL_COLOR;
     context.fillText(label, MARGIN, y);
     context.fillStyle = BACK_INK_COLOR;
     context.fillText(value, MARGIN + 380, y);
+    recordLink(context, href, label, value, MARGIN + 380, y, 50);
   });
 }
 

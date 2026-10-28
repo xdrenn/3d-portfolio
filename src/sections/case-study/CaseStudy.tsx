@@ -59,7 +59,7 @@ export function CaseStudy() {
   return (
     <div
       ref={rootRef}
-      className={`case-study${isOpen ? " is-open" : ""}`}
+      className={`case-study tone-chalk${isOpen ? " is-open" : ""}`}
       role="dialog"
       aria-modal="true"
       aria-labelledby={ELEMENT_IDS.caseStudyTitle}

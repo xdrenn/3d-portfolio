@@ -1,10 +1,21 @@
 import { useEffect, useMemo, useRef, type RefObject } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
-import { Color, LinearSRGBColorSpace, MathUtils, MeshBasicMaterial, Vector2, Vector3, type Group, type PerspectiveCamera } from "three";
+import {
+  Color,
+  LinearSRGBColorSpace,
+  MathUtils,
+  MeshBasicMaterial,
+  Raycaster,
+  Vector2,
+  Vector3,
+  type Group,
+  type Mesh,
+  type PerspectiveCamera,
+} from "three";
 import { degreesToRadians } from "@/lib/math";
 import { CARD_SIZE, createEdgeGeometry, createFaceGeometry } from "./cardGeometry";
 import { nearestFaceAngle, type CardMotion } from "./cardMotion";
-import { createCardTextures, drawCardTextures } from "./cardTextures";
+import { backLinkAt, createCardTextures, drawCardTextures } from "./cardTextures";
 import { createFoilMaterial, type SharedFoilUniforms } from "./foilMaterial";
 
 type CardSceneProps = {
@@ -100,6 +111,39 @@ function useFitCameraToCard() {
   }, [size, camera, invalidate]);
 }
 
+const FRONT_FACE_NAME = "card-front";
+const BACK_FACE_NAME = "card-back";
+
+/**
+ * Lets the card answer "is there a link under this point?". A ray from the camera hits the
+ * nearest face; only the paper side has links, and only when it is the face turned to the viewer.
+ */
+function useCardLinks(motion: CardMotion, groupRef: RefObject<Group>) {
+  const camera = useThree((state) => state.camera);
+  const canvas = useThree((state) => state.gl.domElement);
+  const raycaster = useMemo(() => new Raycaster(), []);
+
+  useEffect(() => {
+    const pointer = new Vector2();
+    motion.linkAt = (clientX, clientY) => {
+      const group = groupRef.current;
+      if (!group) return null;
+      const bounds = canvas.getBoundingClientRect();
+      pointer.set(((clientX - bounds.left) / bounds.width) * 2 - 1, -((clientY - bounds.top) / bounds.height) * 2 + 1);
+      group.updateMatrixWorld();
+      raycaster.setFromCamera(pointer, camera);
+      // Only the two faces: the edge's invisible caps would sit at the same depth.
+      const faces = group.children.filter((child) => child.name === FRONT_FACE_NAME || child.name === BACK_FACE_NAME) as Mesh[];
+      const hit = raycaster.intersectObjects(faces, false)[0];
+      if (!hit || hit.object.name !== BACK_FACE_NAME || !hit.uv) return null;
+      return backLinkAt(hit.uv.x, hit.uv.y);
+    };
+    return () => {
+      motion.linkAt = () => null;
+    };
+  }, [motion, groupRef, camera, canvas, raycaster]);
+}
+
 export function CardScene({ motion, shadowRef, reducedMotion }: CardSceneProps) {
   const invalidate = useThree((state) => state.invalidate);
   const groupRef = useRef<Group>(null);
@@ -111,6 +155,7 @@ export function CardScene({ motion, shadowRef, reducedMotion }: CardSceneProps) 
 
   useFitCameraToCard();
   const textures = useCardTextures();
+  useCardLinks(motion, groupRef);
 
   const sharedUniforms = useMemo<SharedFoilUniforms>(
     () => ({
@@ -168,8 +213,19 @@ export function CardScene({ motion, shadowRef, reducedMotion }: CardSceneProps) 
   return (
     <group ref={groupRef}>
       <mesh geometry={edgeGeometry} material={edgeMaterials} />
-      <mesh geometry={faceGeometry} material={frontMaterial} position-z={CARD_SIZE.thickness / 2} />
-      <mesh geometry={faceGeometry} material={backMaterial} rotation-y={Math.PI} position-z={-CARD_SIZE.thickness / 2} />
+      <mesh
+        name={FRONT_FACE_NAME}
+        geometry={faceGeometry}
+        material={frontMaterial}
+        position-z={CARD_SIZE.thickness / 2}
+      />
+      <mesh
+        name={BACK_FACE_NAME}
+        geometry={faceGeometry}
+        material={backMaterial}
+        rotation-y={Math.PI}
+        position-z={-CARD_SIZE.thickness / 2}
+      />
     </group>
   );
 }

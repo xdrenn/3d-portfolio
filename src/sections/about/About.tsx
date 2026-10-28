@@ -1,41 +1,50 @@
-import { useEffect, useRef } from "react";
-import { useInViewRef } from "@/hooks/useInViewRef";
 import { SectionHead } from "@/layout/SectionHead";
+import { ABOUT_STATEMENT } from "@/content/site";
 import { ELEMENT_IDS } from "@/lib/elementIds";
+import { Printer } from "@/sections/printer/Printer";
+import { tie } from "@/lib/typography";
 import { ServiceList } from "./ServiceList";
-import { Stickers } from "./Stickers";
 import "./about.css";
 
-const toPercent = (value: number, total: number) => `${((value / total) * 100).toFixed(1)}%`;
+/** Key phrases that get the marker highlight. */
+const HIGHLIGHTS = [
+  "Android developer",
+  "full-stack developer",
+  "combine design and development",
+  "unique digital experiences",
+  "the whole brand",
+  "one system",
+  "a clear job",
+];
 
+const escapeRegExp = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+/** `tie` swaps some spaces for non-breaking ones, so a phrase matches either kind. */
+const HIGHLIGHT_PATTERN = new RegExp(
+  `(${HIGHLIGHTS.map((phrase) => escapeRegExp(phrase).replace(/ /g, "[ \\u00a0]")).join("|")})`,
+  "g",
+);
+
+/** Ties the text together, then wraps the key phrases in <mark>. */
+function marked(text: string) {
+  return tie(text)
+    .split(HIGHLIGHT_PATTERN)
+    .map((part, index) => (index % 2 === 1 ? <mark key={index}>{part}</mark> : part));
+}
+
+/**
+ * The About text: two paragraphs on the left, the small printer in the free corner on the right.
+ * Services follow below.
+ */
 export function About() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInViewRef(sectionRef);
-
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-
-    const trackPointer = (event: PointerEvent) => {
-      if (!isInView.current) return;
-      section.style.setProperty("--pointer-x", toPercent(event.clientX, window.innerWidth));
-      section.style.setProperty("--pointer-y", toPercent(event.clientY, window.innerHeight));
-    };
-
-    window.addEventListener("pointermove", trackPointer);
-    return () => window.removeEventListener("pointermove", trackPointer);
-  }, [isInView]);
-
   return (
-    <section id={ELEMENT_IDS.about} className="about page-padding" ref={sectionRef}>
-      <SectionHead title="About">Working with clients worldwide.</SectionHead>
-      <div className="about__intro grid">
-        <p className="about__statement">
-          Designer who <em>codes.</em><br /> Developer who cares how it looks.
-        </p>
-        <div className="about__stickers">
-          <Stickers />
+    <section id={ELEMENT_IDS.about} className="about panel tone-chalk page-padding">
+      <SectionHead title="About"></SectionHead>
+      <div className="about__text grid">
+        <div className="about__copy">
+          <p>{marked(ABOUT_STATEMENT.first)}</p>
+          <p>{marked(ABOUT_STATEMENT.second)}</p>
         </div>
+        <Printer />
       </div>
       <ServiceList />
     </section>

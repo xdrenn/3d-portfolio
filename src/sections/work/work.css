@@ -1,102 +1,11 @@
-.work {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  z-index: 3;
-  min-height: 100svh;
-  padding-top: clamp(26px, 3.5vw, 48px);
-  padding-bottom: clamp(40px, 6vh, 80px);
-  border-radius: clamp(18px, 2.4vw, 34px) clamp(18px, 2.4vw, 34px) 0 0;
-  background: var(--color-bg);
-  box-shadow: 0 -1px 0 var(--color-line), 0 -50px 80px -50px rgba(0, 0, 0, 0.35);
-  scroll-margin-top: 40px;
-}
-
-.work > * {
-  position: relative;
-  z-index: 1;
-}
-
-.work > .grid-guides {
-  position: absolute;
-  z-index: 0;
-}
-
-.work .section-head__lead {
-  max-width: 34ch;
-}
-
-.work > .work__folder-tab {
-  position: absolute;
-  left: var(--page-padding);
-  bottom: 100%;
-  display: flex;
-  align-items: center;
-  gap: clamp(18px, 3vw, 48px);
-  height: clamp(34px, 4.4vh, 44px);
-  overflow: hidden;
-  padding: 0 clamp(16px, 1.6vw, 24px);
-  border-radius: 14px 14px 0 0;
-  background: var(--gradient-foil);
-  background-size: 300% 100%;
-  background-position: calc(var(--hero-progress, 0) * 120%) 0;
-  color: #000;
-  font-family: var(--font-pixel);
-  font-size: 12px;
-}
-
-.work__folder-tab::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: var(--texture-crinkle);
-  background-size: 500px;
-  mix-blend-mode: overlay;
-  opacity: 0.75;
-}
-
-.work__folder-tab span {
-  position: relative;
-  z-index: 1;
-}
-
+/* The computer stage. It sits on the first screen, inside .hero (see hero.css for its column and size). */
 .work__stage {
   position: relative;
   display: flex;
   flex: 1 0 auto;
   flex-direction: column;
   align-items: center;
-  /* The stage takes all the height left under the heading, and the computer sits in its middle. */
-  justify-content: center;
-  margin-top: clamp(150px, 3vh, 48px);
+  justify-content: flex-start;
   perspective: 1600px;
-}
-
-.work__stage::before {
-  content: "";
-  position: absolute;
-  top: 44%;
-  left: 50%;
-  z-index: -1;
-  width: min(1100px, 96%);
-  aspect-ratio: 1.5;
-  transform: translate(-50%, -50%);
-  background:
-    radial-gradient(closest-side at 35% 45%, rgba(255, 120, 200, 0.32), transparent),
-    radial-gradient(closest-side at 65% 40%, rgba(130, 190, 255, 0.32), transparent),
-    radial-gradient(closest-side at 50% 70%, rgba(190, 150, 255, 0.26), transparent);
-  pointer-events: none;
-}
-
-.work__hint {
-  margin-top: 10px;
-  color: var(--color-muted);
-  font-size: 13px;
-  text-align: center;
-}
-
-@media (max-width: 860px) {
-  .work__hint {
-    display: none;
-  }
+  scroll-margin-top: 70px;
 }

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
 import { wrapProjectIndex } from "@/content/projects";
-import { projectFile, type DesktopFile } from "./desktopFiles";
+import { visit } from "@/lib/visit";
+import { DESKTOP_FILES, projectFile, type DesktopFile } from "./desktopFiles";
 
 export type OpenWindow = {
   id: number;
@@ -16,6 +17,8 @@ const BOOT_DURATION_MS = 1500;
 const FIRST_WINDOW_DELAY_MS = 350;
 const INITIAL_Z_INDEX = 10;
 const FALLBACK_SCREEN_SIZE = { width: 600, height: 450 };
+/** The file that opens by itself after boot: the about note says hello first. */
+const FIRST_FILE_INDEX = DESKTOP_FILES.findIndex((file) => file.kind === "about");
 
 export function useDesktop(screenRef: RefObject<HTMLDivElement>, reducedMotion: boolean) {
   const [windows, setWindows] = useState<OpenWindow[]>([]);
@@ -58,6 +61,7 @@ export function useDesktop(screenRef: RefObject<HTMLDivElement>, reducedMotion: 
 
   const openWindow = useCallback(
     (file: DesktopFile) => {
+      if (file.kind === "about") visit.readAbout();
       setWindows((current) => {
         const remaining = file.kind === "project" ? current.filter((open) => open.file.kind !== "project") : current;
 
@@ -102,6 +106,7 @@ export function useDesktop(screenRef: RefObject<HTMLDivElement>, reducedMotion: 
   const openProject = useCallback(
     (projectIndex: number) => {
       const wrappedIndex = selectProject(projectIndex);
+      visit.openProject(wrappedIndex);
       setSelectedFileIndex(wrappedIndex);
       openWindow(projectFile(wrappedIndex));
     },
@@ -130,11 +135,14 @@ export function useDesktop(screenRef: RefObject<HTMLDivElement>, reducedMotion: 
       () => {
         isBootedRef.current = true;
         setIsBooted(true);
-        schedule(() => openProject(currentProjectIndex.current), FIRST_WINDOW_DELAY_MS);
+        schedule(() => {
+          setSelectedFileIndex(FIRST_FILE_INDEX);
+          openWindow(DESKTOP_FILES[FIRST_FILE_INDEX]);
+        }, FIRST_WINDOW_DELAY_MS);
       },
       reducedMotion ? 0 : BOOT_DURATION_MS,
     );
-  }, [clearTimers, schedule, openProject, reducedMotion]);
+  }, [clearTimers, schedule, openWindow, reducedMotion]);
 
   const getIsBooted = useCallback(() => isBootedRef.current, []);
   const getCurrentProjectIndex = useCallback(() => currentProjectIndex.current, []);

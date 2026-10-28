@@ -30,7 +30,7 @@ export function HeroStack({ children }: { children: ReactNode }) {
   }, [reducedMotion]);
 
   return (
-    <div className="hero-stack" ref={stackRef}>
+    <div className="hero-stack panel tone-chalk" ref={stackRef}>
       {children}
     </div>
   );

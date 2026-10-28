@@ -3,6 +3,7 @@ import { PROJECT_COUNT } from "@/content/projects";
 import { SPARKLE_PATH, SPARKLE_VIEWBOX } from "@/lib/shapes";
 import { AboutWindow } from "./AboutWindow";
 import { CardFileWindow } from "./CardFileWindow";
+import { CertificateWindow } from "./CertificateWindow";
 import { DESKTOP_FILES, type DesktopFile } from "./desktopFiles";
 import { DesktopIcon } from "./DesktopIcon";
 import type { DesktopWindowProps } from "./DesktopWindow";
@@ -78,6 +79,8 @@ export function Desktop({ desktop, screenRef, computerRef, onOpenFile, onOpenCas
             return <AboutWindow key={open.id} {...windowProps} />;
           case "card":
             return <CardFileWindow key={open.id} {...windowProps} />;
+          case "certificate":
+            return <CertificateWindow key={open.id} {...windowProps} />;
         }
       })}
     </div>

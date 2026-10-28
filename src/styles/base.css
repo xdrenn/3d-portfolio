@@ -1,6 +1,7 @@
 html {
   scroll-padding-top: env(safe-area-inset-top, 0px);
-  scroll-behavior: smooth;
+  /* No CSS smooth scrolling: the inertial scroll in lib/smoothScroll.ts does it. */
+  scroll-behavior: auto;
 }
 
 *,
@@ -11,8 +12,9 @@ html {
 
 body {
   margin: 0;
-  overflow-x: hidden;
-  background: var(--color-bg);
+  /* clip, not hidden: hidden would turn body into a scroll box and break the sticky sheets. */
+  overflow-x: clip;
+  background: var(--chalk);
   color: var(--color-fg);
   font-family: var(--font-sans);
   font-size: 16px;
@@ -59,6 +61,52 @@ footer {
 section {
   position: relative;
   padding-top: clamp(90px, 12vw, 190px);
+}
+
+/* ---------- Section grounds: chalk and graphite, alternating ---------- */
+
+.tone-chalk {
+  --color-bg: var(--chalk);
+  --color-fg: #000;
+  --color-muted: #77776f;
+  --color-line: rgba(0, 0, 0, 0.13);
+  --color-panel: #e6e6e2;
+}
+
+.tone-graphite {
+  --color-bg: var(--graphite);
+  --color-fg: var(--bone);
+  --color-muted: #8c8c87;
+  --color-line: rgba(232, 232, 227, 0.16);
+  --color-panel: #232427;
+}
+
+/* ---------- Heavy pages ----------
+ * Every section is a sheet. It sticks once its bottom reaches the bottom of the screen
+ * (--panel-top comes from lib/stackedPanels.ts), and the next sheet slides over it.
+ * The covered sheet darkens a little (--covered, 0..1), which is what makes it feel heavy.
+ */
+.panel {
+  position: sticky;
+  top: var(--panel-top, 0px);
+  z-index: 1;
+  background: var(--color-bg);
+  color: var(--color-fg);
+  box-shadow: 0 -24px 60px -24px rgba(0, 0, 0, 0.35);
+}
+
+.panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  background: #000;
+  opacity: calc(var(--covered, 0) * 0.55);
+  pointer-events: none;
+}
+
+main > section.panel {
+  padding-bottom: clamp(90px, 10vw, 160px);
 }
 
 .grid {
@@ -151,7 +199,40 @@ section {
     transition-duration: 0s !important;
   }
 
-  html {
-    scroll-behavior: auto;
-  }
+}
+
+/*
+ * Footnotes: the designer's own notes on the page. Small superscript in the text,
+ * the note itself set quiet and close by. Used sparingly, where a claim needs proof.
+ */
+.footnote-ref {
+  margin-left: 0.12em;
+  font-family: var(--font-sans);
+  font-size: 0.42em;
+  font-style: normal;
+  vertical-align: super;
+  text-decoration: none;
+}
+
+.footnote {
+  display: flex;
+  gap: 0.6em;
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.footnote__mark {
+  color: var(--color-fg);
+}
+
+/* Read by screen readers, invisible on screen. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }

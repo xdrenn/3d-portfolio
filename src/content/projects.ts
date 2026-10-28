@@ -19,19 +19,6 @@ const video = (name: string): ProjectMedia => ({ kind: "video", name, poster: `$
 
 export const PROJECTS: Project[] = [
   {
-    title: "Crystal",
-    categories: ["Website", "poster", "UI"],
-    cover: "crystalPoster",
-    description:
-      "Site and poster for Crystal, an AI tool that turns sketches and text prompts into 3D models. Crystals hold the brand together: a raw quartz cluster on the site, sharp prismatic shards on the poster, with scattered letters and oversized type growing around them.",
-    details: [
-      ["Type", "Concept brand"],
-      ["Role", "UI, poster"],
-      ["Tools", "Figma, AI-generated 3D"],
-    ],
-    media: [image("crystal"), image("crystalPoster")],
-  },
-  {
     title: "RatTattoo",
     categories: ["Website"],
     cover: "rat1",
@@ -44,6 +31,19 @@ export const PROJECTS: Project[] = [
       ["Grid", "12 columns"],
     ],
     media: [image("rat1"), image("rat2"), image("rat3"), image("rat4"), image("rat5")],
+  },
+  {
+    title: "Crystal",
+    categories: ["Website", "poster", "UI"],
+    cover: "crystalPoster",
+    description:
+      "Site and poster for Crystal, an AI tool that turns sketches and text prompts into 3D models. Crystals hold the brand together: a raw quartz cluster on the site, sharp prismatic shards on the poster, with scattered letters and oversized type growing around them.",
+    details: [
+      ["Type", "Concept brand"],
+      ["Role", "UI, poster"],
+      ["Tools", "Figma, AI-generated 3D"],
+    ],
+    media: [image("crystal"), image("crystalPoster")],
   },
   {
     title: "Mark Rothko",
@@ -91,6 +91,14 @@ export const PROJECTS: Project[] = [
     ],
     media: [image("kupfer"), image("kupfer-back")],
   },
+];
+
+/**
+ * Hidden from the site. Move a project back into PROJECTS to show it again.
+ * The 3D gallery now lives inside Mark Rothko; its cover is "gallery-room".
+ * Posters are hidden for now: the AI-generated series weakens the selection.
+ */
+export const HIDDEN_PROJECTS: Project[] = [
   {
     title: "Posters",
     categories: ["Poster", "type"],
@@ -102,13 +110,6 @@ export const PROJECTS: Project[] = [
     ],
     media: [image("nostalgic"), image("minimal"), image("moon")],
   },
-];
-
-/**
- * Hidden from the site. Move a project back into PROJECTS to show it again.
- * The 3D gallery now lives inside Mark Rothko; its cover is "gallery-room".
- */
-export const HIDDEN_PROJECTS: Project[] = [
   {
     title: "Homedecor",
     categories: ["Website", "branding", "UI"],
@@ -129,3 +130,5 @@ export const formatCategories = (project: Project) => project.categories.join(",
 export const primaryCategory = (project: Project) => project.categories[0];
 
 export const wrapProjectIndex = (index: number) => ((index % PROJECT_COUNT) + PROJECT_COUNT) % PROJECT_COUNT;
+
+export const projectRole = (project: Project) => project.details.find(([label]) => label === "Role")?.[1] ?? "";
